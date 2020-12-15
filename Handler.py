@@ -12,6 +12,7 @@ PROJECT =r""
 Prefix = ''
 # Fetches the path from PathFile
 def FetchPath():
+    print("FETCH PATH Handler")
     pathInFile=['','','']
     try:
         with open(FILE, "r") as f:
@@ -56,6 +57,7 @@ def Execute():
     
 # Deletes the temporary assets in tempExports folder
 def DeleteTempAssets():
+    print("Delete Handler")
     folder = backendpath + '/tempExports'
     myfiles = os.listdir(folder)
     for file in myfiles:
@@ -63,7 +65,7 @@ def DeleteTempAssets():
     
 # Exports the temporary assets in tempExports folder 
 def ExportTempAssets(maxversion2021):
-    from Interface import LiveLinkUI
+    print("Export TEMP Handler")
     if maxversion2021:
         import pymxs as mxs
         
@@ -87,6 +89,7 @@ def ExportTempAssets(maxversion2021):
     
 # Gets the path of Cmd and Project right: used right when the export button is clicked
 def SendPaths(ProjectPath):
+    print("PATHSS Handler")
     global PROJECT, UE_CMD
     
     PROJECT = ProjectPath
@@ -100,6 +103,8 @@ def SendPaths(ProjectPath):
 
     
 def FindUnrealProjectVersion():
+    print("FIND VERSIon Handler")
+
     file = PROJECT
     lines = []
     version = ""
@@ -141,6 +146,7 @@ def EnablePythonPlugin():
         
 
 def fetchAssetPrefix(prefix):
+    print("FETCH PREFIX Handler")
     global Prefix
     Prefix = prefix
     
