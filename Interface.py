@@ -131,13 +131,11 @@ class PluginUI(QWidget):
         
         Handler.SendPaths(self.project)
         Handler.DeleteTempAssets()
-        Handler.ExportTempAssets(self.MaxVersion2021)
-        Handler.EnablePythonPlugin()
-        Handler.Execute()
-        print("EXECUTE")
+        if Handler.ExportTempAssets(self.MaxVersion2021):
+            Handler.EnablePythonPlugin()
+            Handler.Execute()
 
 def initPlugin():
-    print("INIT")
     if PluginUI.Instance != None:
         try: PluginUI.Instance.close()
         except: pass
@@ -150,7 +148,6 @@ def initPlugin():
     return PluginUI.Instance
 
 def getVersion():
-    print("GET VERSION PY")
 
     try:
         import pymxs

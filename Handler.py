@@ -12,7 +12,6 @@ PROJECT =r""
 Prefix = ''
 # Fetches the path from PathFile
 def FetchPath():
-    print("FETCH PATH Handler")
     pathInFile=['','','']
     try:
         with open(FILE, "r") as f:
@@ -43,8 +42,6 @@ def savePathInFile(path, line):
 # Runs the Commandline argument for the UE Imports
 def Execute(): 
            
-    print("EXECUTE Handler")
-
     if UE_CMD=="":
         print("Unreal Path Error. Check README for more info")
         return
@@ -57,7 +54,6 @@ def Execute():
     
 # Deletes the temporary assets in tempExports folder
 def DeleteTempAssets():
-    print("Delete Handler")
     folder = backendpath + '/tempExports'
     myfiles = os.listdir(folder)
     for file in myfiles:
@@ -65,31 +61,39 @@ def DeleteTempAssets():
     
 # Exports the temporary assets in tempExports folder 
 def ExportTempAssets(maxversion2021):
-    print("Export TEMP Handler")
     if maxversion2021:
         import pymxs as mxs
         
-        count = len(mxs.runtime.selection)
-        for i in range(count):
-            mxs.runtime.FBXExporterSetParam('ResetExport')
-            mxs.runtime.FBXExporterSetParam('Animation', False)
-            mxs.runtime.exportFile(backendpath + '/tempExports/'+ Prefix + mxs.runtime.selection[i].name + '.fbx', mxs.runtime.Name("noPrompt"), selectedOnly=True, using='FBXEXP')    
+        if len(mxs.runtime.selection) == 0:
+            print("No Object Selected, Stopping Export")
+            return False
+        #for i in range(count):
+        mxs.runtime.FBXExporterSetParam('ResetExport')
+        mxs.runtime.FBXExporterSetParam('Animation', False)
+        mxs.runtime.exportFile(backendpath + '/tempExports/'+ Prefix  + '.fbx', mxs.runtime.Name("noPrompt"), selectedOnly=True, using='FBXEXP')    
     else:
         import MaxPlus
         
         selection = MaxPlus.SelectionManager.Nodes
+        count = 0
         for obj in selection:
-            MaxPlus.Core.EvalMAXScript("pluginManager.loadClass FBXEXPORTER")
-            MaxPlus.Core.EvalMAXScript('FBXExporterSetParam "ASCII" True')
-            MaxPlus.Core.EvalMAXScript('FBXExporterSetParam "Animation" False')
-            MaxPlus.Core.EvalMAXScript('FBXExporterSetParam "EmbedTextures" False')
-            asset = backendpath + '/tempExports/' + Prefix + obj.Name + '.fbx'
-            MaxPlus.Core.EvalMAXScript("exportFile \"" +  asset + "\" #noPrompt selectedOnly:true" )
+            count +=1
+        if count == 0:
+            print("No Object Selected, Stopping Export")
+            return False
+       
+        MaxPlus.Core.EvalMAXScript("pluginManager.loadClass FBXEXPORTER")
+        MaxPlus.Core.EvalMAXScript('FBXExporterSetParam "ASCII" True')
+        MaxPlus.Core.EvalMAXScript('FBXExporterSetParam "Animation" False')
+        MaxPlus.Core.EvalMAXScript('FBXExporterSetParam "EmbedTextures" False')
+        asset = backendpath + '/tempExports/' + Prefix + '.fbx'
+        MaxPlus.Core.EvalMAXScript("exportFile \"" +  asset + "\" #noPrompt selectedOnly:true" )
+        
+    return True
 
     
 # Gets the path of Cmd and Project right: used right when the export button is clicked
 def SendPaths(ProjectPath):
-    print("PATHSS Handler")
     global PROJECT, UE_CMD
     
     PROJECT = ProjectPath
@@ -103,7 +107,6 @@ def SendPaths(ProjectPath):
 
     
 def FindUnrealProjectVersion():
-    print("FIND VERSIon Handler")
 
     file = PROJECT
     lines = []
@@ -121,7 +124,6 @@ def FindUnrealProjectVersion():
 
 
 def EnablePythonPlugin():
-    print("PYTHON PLUGIN")
 
     import json
     file = PROJECT
@@ -146,7 +148,6 @@ def EnablePythonPlugin():
         
 
 def fetchAssetPrefix(prefix):
-    print("FETCH PREFIX Handler")
     global Prefix
     Prefix = prefix
     
